@@ -1,0 +1,158 @@
+RewriteEngine On
+RewriteBase /
+# =====================================
+# AUTO WEBP SERVE
+# =====================================
+<IfModule mod_rewrite.c>
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.+)\.(jpg|jpeg|png)$
+RewriteCond %{REQUEST_FILENAME}.webp -f
+RewriteRule ^(.+)\.(jpg|jpeg|png)$ $1.webp [T=image/webp,E=accept:1]
+</IfModule>
+# =====================================
+# SECURITY HEADERS
+# =====================================
+<IfModule mod_headers.c>
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# =====================================
+# ADMIN PANEL EXCLUDE
+# =====================================
+RewriteRule ^dermessence-admin-main/ - [L]
+
+# =====================================
+# SKIP CONTACT SECTION
+# =====================================
+RewriteRule ^contact_section/ - [L]
+
+# =====================================
+# REMOVE TRAILING SLASH
+# =====================================
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ $1 [R=301,L]
+
+# =====================================
+# FIX PARAMETER URLS
+# =====================================
+RewriteCond %{QUERY_STRING} slug=([a-zA-Z0-9-]+)
+RewriteRule ^concern\.php$ /concern/%1? [R=301,L]
+
+RewriteCond %{QUERY_STRING} slug=([a-zA-Z0-9-]+)
+RewriteRule ^treatment\.php$ /treatment/%1? [R=301,L]
+
+# =====================================
+# DYNAMIC TREATMENT
+# =====================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^treatment/([^/]+)$ treatment.php?slug=$1 [L,QSA]
+
+# =====================================
+# DYNAMIC CONCERNS
+# =====================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^concern/([^/]+)$ concern.php?slug=$1 [L,QSA]
+
+# =====================================
+# LOAD NORMAL PAGES WITHOUT .PHP
+# =====================================
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [L]
+
+# =====================================
+# REDIRECT .PHP TO CLEAN URL
+# =====================================
+RewriteCond %{THE_REQUEST} \s/([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# =====================================
+# FIX DUPLICATE INDEX
+# =====================================
+RewriteRule ^index$ https://thedermessence.com/ [R=301,L]
+RewriteRule ^index.php$ https://thedermessence.com/ [R=301,L]
+
+# =====================================
+# CUSTOM REDIRECTS
+# =====================================
+Redirect 301 /treatment/morpheus8-treatment /morpheus8-treatment-chandigarh
+Redirect 301 /treatment/hifu-treatment /hifu-treatment-chandigarh
+Redirect 301 /skin-hair-concerns-dermatologist-chandigarh.php /skin-specialist-chandigarh
+
+Redirect 301 /index.html https://thedermessence.com/
+Redirect 301 /Blogs.html https://thedermessence.com/blogs
+Redirect 301 /rosacea.html https://thedermessence.com/rosacea
+Redirect 301 /hydrafacial.html https://thedermessence.com/hydrafacial
+Redirect 301 /Bumps-On-Forehead.html https://thedermessence.com/bumps-on-forehead
+Redirect 301 /carbon-laser-treatment-oily-skin-acne.html https://thedermessence.com/carbon-laser
+Redirect 301 /concern.html https://thedermessence.com/skin-concerns
+Redirect 301 "/Tribeam Q Switched Laser.html" https://thedermessence.com/q-switched-laser
+Redirect 301 /dermatologist-in-chandigarh https://thedermessence.com/
+
+# =====================================
+# AUTO WEBP IMAGE SERVING
+# =====================================
+<IfModule mod_rewrite.c>
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.+)\.(jpg|jpeg|png)$
+RewriteCond %{REQUEST_FILENAME}.webp -f
+RewriteRule ^(.+)\.(jpg|jpeg|png)$ $1.webp [T=image/webp,E=accept:1]
+</IfModule>
+
+# =====================================
+# GZIP COMPRESSION
+# =====================================
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# =====================================
+# BROWSER CACHE
+# =====================================
+<IfModule mod_expires.c>
+ExpiresActive On
+
+ExpiresByType image/jpg "access plus 1 year"
+ExpiresByType image/jpeg "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+ExpiresByType image/webp "access plus 1 year"
+
+ExpiresByType text/css "access plus 1 month"
+ExpiresByType application/javascript "access plus 1 month"
+
+ExpiresByType application/pdf "access plus 1 month"
+ExpiresByType text/javascript "access plus 1 month"
+
+ExpiresDefault "access plus 7 days"
+
+</IfModule>
+
+# =====================================
+# KEEP ALIVE
+# =====================================
+<IfModule mod_headers.c>
+Header set Connection keep-alive
+</IfModule>
+
+
+# BROTLI + GZIP
+<IfModule mod_brotli.c>
+AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# CACHE CONTROL
+<IfModule mod_headers.c>
+Header set Cache-Control "public, max-age=31536000"
+</IfModule>

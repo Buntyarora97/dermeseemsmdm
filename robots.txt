@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Important folders block (security)
+Disallow: /includes/
+Disallow: /config/
+Disallow: /admin/
+Disallow: /cgi-bin/
+
+# Block system files
+Disallow: /error_log
+Disallow: /tmp/
+Disallow: /logs/
+
+# Allow assets
+Allow: /assets/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Sitemap
+Sitemap: https://thedermessence.com/sitemap.xml
